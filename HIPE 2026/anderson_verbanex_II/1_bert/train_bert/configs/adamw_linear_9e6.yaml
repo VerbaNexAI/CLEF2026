@@ -1,0 +1,52 @@
+# AdamW + linear LR schedule + warmup 6%, per README-style single-GPU sizing:
+#   per_device_train_batch_size * gradient_accumulation_steps = 16 * 2 = 32 (= total_train_batch_size on 1 GPU).
+# Optimizer maps to HuggingFace TrainingArguments: optim=adamw_torch, adam_beta{1,2}, adam_epsilon.
+run_name: adamw_linear_9e6_v1
+
+base_model: MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7
+data_dir: low_models/train_bert/dataset
+output_dir: low_models/train_bert/runs
+max_length: 512
+text_max_chars: 2000
+seed: 42
+fp16_auto: true
+
+mlflow:
+  enabled: true
+  experiment: train_bert
+  tracking_uri: http://localhost:5000
+
+# Same hyperparameters for `at` and `isAt` (binary task still uses 3 NLI logits in this trainer).
+at:
+  epochs: 2
+  batch_size: 16
+  eval_batch_size: 32
+  gradient_accumulation_steps: 2
+  learning_rate: 9.0e-6
+  weight_decay: 0.01
+  warmup_ratio: 0.06
+  label_smoothing: 0.0
+  use_class_weights: false
+  early_stopping_patience: 0
+  lr_scheduler_type: linear
+  optim: adamw_torch
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+
+isAt:
+  epochs: 2
+  batch_size: 16
+  eval_batch_size: 32
+  gradient_accumulation_steps: 2
+  learning_rate: 9.0e-6
+  weight_decay: 0.01
+  warmup_ratio: 0.06
+  label_smoothing: 0.0
+  use_class_weights: false
+  early_stopping_patience: 0
+  lr_scheduler_type: linear
+  optim: adamw_torch
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8

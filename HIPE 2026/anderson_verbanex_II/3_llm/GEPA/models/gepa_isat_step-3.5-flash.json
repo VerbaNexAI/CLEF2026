@@ -1,0 +1,55 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "**Task**: Determine whether the specified person was present at the specified location within approximately one month prior to the document's publication date, based on the provided text.\n\n**Input Format**: Each input consists of:\n- `text`: The document content (historical newspaper, letter, official record, etc.).\n- `person`: The name (or description) of the person to check.\n- `location`: The location name to check.\n- `date`: The document's publication date (YYYY-MM-DD) as provided in the dataset.\n\n**Output Format**: \n- `reasoning`: A step-by-step explanation of your analysis.\n- `classification`: Either `TRUE` or `FALSE`.\n\n**Step-by-Step Strategy**:\n\n1. **Extract Publication Date from Text**:\n   - Look for a dateline at the beginning (e.g., \"LONDON, Dec. 31.\") or a clear date at the end (e.g., \"July 23.\") that indicates when the document was issued or published.\n   - If such an internal date exists and is unambiguous, treat it as the *reference publication date* for the one‑month window. This overrides the provided `date` because it is more directly tied to the document itself.\n   - If no internal date is found, use the provided `date`.\n\n2. **Identify Evidence of Presence**:\n   - Search the text for explicit statements that place the person at the location (e.g., \"was in Cookeville\", \"deposited in this office\", \"welcomed the League to Tuskegee\").\n   - Also consider statements that assign the person a role or title that inherently locates them at the specified location (e.g., \"commanding officer of the Myrtle Beach Air Force Base\", \"of the Iota Phi Lambda sorority at Tuskegee Institute\"). Such titles imply the person is stationed or regularly present at that location.\n   - If the person’s name appears with the location in a way that indicates affiliation (e.g., \"Alexander Addison of the said District\"), treat that as presence evidence.\n\n3. **Determine the Date of Presence**:\n   - If the presence is tied to a specific event or action with a date (e.g., \"March 25-27\", \"the other day\", \"July 10\"), extract that date.\n   - For relative time phrases (\"the other day\", \"recently\", \"just\"), assume the event occurred within a few days up to one week before the reference publication date.\n   - If the presence is inferred solely from a current title (e.g., \"commanding officer of X\"), use the reference publication date as the presence date, because the title indicates ongoing affiliation.\n\n4. **Assess the Temporal Window**:\n   - \"Approximately one month prior\" should be interpreted flexibly. Accept a difference of up to 45 days, or more simply, consider the presence valid if its date falls in the same calendar month as the reference publication date or the immediately preceding calendar month.\n   - Compute the difference if needed: if the presence date is ≤ 45 days before the reference publication date, treat it as within the window.\n\n5. **Make the Decision**:\n   - If you have evidence that the person was at the location (explicitly or via title) and the presence date satisfies the temporal window, output `TRUE`.\n   - Otherwise, output `FALSE`.\n\n**Important Notes**:\n- Historical texts may use varied date formats (e.g., \"the 10th of July\", \"March 25-27\", \"the other day\"). Be robust in parsing.\n- The person’s name may appear with variations; use contextual clues to confirm identity.\n- The specified location might be mentioned indirectly (e.g., \"the District\", \"the base\"). Ensure you correctly map it to the given location.\n- Do not require the person to be described as *currently* at the location at the exact moment of publication; presence at any time within the window is sufficient.\n- When a title embeds the location (e.g., \"officer of X\"), that is strong evidence of presence at X unless the text explicitly states the person is elsewhere.\n\n**Examples from Training** (illustrative, not exhaustive):\n- *Brussels capture*: The dateline \"LONDON, Dec. 31.\" gives the publication date; General D’Alton is explicitly present at Brussels on Dec 12 → within one month → `TRUE`.\n- *Book deposit notice*: The line \"July 23.\" at the end is the publication date; Alexander Addison deposited the book on July 10 → within one month → `TRUE`.\n- *Committee address*: The address is dated Feb 18, and the newspaper publication is Mar 31 (41 days). 41 days is within the approximate month window; the signatory was present at Point‑à‑Pitre on Feb 18 → `TRUE`.\n- *Col. Gruenwald*: He is “commanding officer of the Myrtle Beach Air Force Base”. The title ties him to the base; the article is recent (April 6) and describes his activity on March 25‑27, so he is considered present at the base within the month → `TRUE`.\n\nFollow these guidelines to produce consistent and accurate classifications.",
+      "fields": [
+        {
+          "prefix": "Text:",
+          "description": "The document text to analyze"
+        },
+        {
+          "prefix": "Person:",
+          "description": "The person mentioned in the text"
+        },
+        {
+          "prefix": "Location:",
+          "description": "The location mentioned in the text"
+        },
+        {
+          "prefix": "Date:",
+          "description": "The document publication date"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Classification:",
+          "description": "One of: TRUE, FALSE"
+        }
+      ]
+    },
+    "lm": {
+      "model": "openrouter/stepfun/step-3.5-flash",
+      "model_type": "chat",
+      "cache": true,
+      "num_retries": 3,
+      "finetuning_model": null,
+      "launch_kwargs": {},
+      "train_kwargs": {},
+      "temperature": 1,
+      "max_tokens": null,
+      "api_base": "https://openrouter.ai/api/v1"
+    }
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.1.3",
+      "cloudpickle": "3.1"
+    }
+  }
+}

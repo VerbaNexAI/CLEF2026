@@ -1,0 +1,103 @@
+# ---------------------------------------------------------------------------
+# Secrets and credentials
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+credentials.json
+secrets.json
+*service-account*.json
+*_credentials.*
+*_secret.*
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+develop-eggs/
+downloads/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+.installed.cfg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+.virtualenv/
+
+# ---------------------------------------------------------------------------
+# Jupyter
+# ---------------------------------------------------------------------------
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# ML artifacts (model weights, checkpoints, training runs)
+# ---------------------------------------------------------------------------
+# Comment out individual entries if you DO want to track them.
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.gguf
+*.onnx
+*.pb
+*.tflite
+*.h5
+*.hdf5
+**/checkpoint-*/
+**/runs/
+**/wandb/
+**/mlruns/
+**/mlflow_artifacts/
+**/models_best/
+.cache_huggingface/
+hf_cache/
+
+# ---------------------------------------------------------------------------
+# IDE / OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# Logs and temporary outputs
+# ---------------------------------------------------------------------------
+*.log
+logs/
+tmp/
+temp/
+.tmp/

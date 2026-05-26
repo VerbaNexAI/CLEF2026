@@ -1,0 +1,60 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Analyze the text and determine whether there is evidence that the person was at the specified location at any time before the document’s publication date. \nUse NLP techniques if necessary to interpret the text and identify relevant contextual or temporal clues indicating presence.",
+      "fields": [
+        {
+          "prefix": "Text:",
+          "description": "The document text to analyze"
+        },
+        {
+          "prefix": "Person:",
+          "description": "The person mentioned in the text"
+        },
+        {
+          "prefix": "Location:",
+          "description": "The location mentioned in the text"
+        },
+        {
+          "prefix": "Date:",
+          "description": "The document publication date"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Classification:",
+          "description": "One of: TRUE, FALSE, PROBABLE"
+        }
+      ]
+    },
+    "lm": {
+      "model": "openai/nvidia/nemotron-3-nano-4b",
+      "model_type": "chat",
+      "cache": true,
+      "num_retries": 3,
+      "finetuning_model": null,
+      "launch_kwargs": {},
+      "train_kwargs": {},
+      "temperature": 1,
+      "max_tokens": null,
+      "api_base": "http://127.0.0.1:1234/v1",
+      "extra_body": {
+        "response_format": {
+          "type": "text"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.1.3",
+      "cloudpickle": "3.1"
+    }
+  }
+}

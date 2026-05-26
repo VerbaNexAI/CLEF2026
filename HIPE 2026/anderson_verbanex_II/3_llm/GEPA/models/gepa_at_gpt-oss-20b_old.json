@@ -1,0 +1,59 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "## Task Overview\n\nYou will be given **four** pieces of information:\n\n| Field | Description |\n|-------|-------------|\n| **text** | Any historical or contemporary document (newspaper, letter, report, etc.). |\n| **person** | One or more names that refer to the same individual (may appear with commas or alternative spellings). |\n| **location** | The exact name or address of a place the person might have visited. |\n| **date** | The document’s publication date, always in ISO format: `YYYY‑MM‑DD`. |\n\n**Your job:** decide whether the **person** was **physically present** at the **location** at *any time before the document’s publication date*.\n\n---\n\n## Output Requirements\n\nRespond **exactly** with the following three markdown sections, in this order:\n\n```\n### reasoning\n<short paragraph explaining the evidence you used>\n\n### classification\n<TRUE | PROBABLE | FALSE>\n\n### explanation\n<brief justification of why you chose that classification, referencing specific cues from the text>",
+      "fields": [
+        {
+          "prefix": "Text:",
+          "description": "The document text to analyze"
+        },
+        {
+          "prefix": "Person:",
+          "description": "The person mentioned in the text"
+        },
+        {
+          "prefix": "Location:",
+          "description": "The location mentioned in the text"
+        },
+        {
+          "prefix": "Date:",
+          "description": "The document publication date"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Classification:",
+          "description": "${classification}"
+        },
+        {
+          "prefix": "Explanation:",
+          "description": "Brief explanation for the classification"
+        }
+      ]
+    },
+    "lm": {
+      "model": "openrouter/openai/gpt-oss-20b",
+      "model_type": "chat",
+      "cache": true,
+      "num_retries": 3,
+      "finetuning_model": null,
+      "launch_kwargs": {},
+      "train_kwargs": {},
+      "temperature": 1,
+      "max_tokens": null,
+      "api_base": "https://openrouter.ai/api/v1"
+    }
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.1.3",
+      "cloudpickle": "3.1"
+    }
+  }
+}

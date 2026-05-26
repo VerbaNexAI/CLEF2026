@@ -1,0 +1,60 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Task: Presence‑within‑One‑Month Detection  \n\n**Input format (one example):**  \n- **text**: Document text to analyse. May contain dates, events, verb tenses.  \n- **person**: Name(s) whose presence is being evaluated.  \n- **location**: Place where the person’s recent presence must be inferred.  \n- **date**: Publication or reference date of the document (ISO YYYY‑MM‑DD).  \n\n**Output required:** A short reasoning paragraph that explains whether the person was present at the given location *within approximately one month* before the publication date, followed by a single classification label:  \n```\n### reasoning\n[Your explanation here...]\n### classification\nTRUE | FALSE\n```  \n\n**Key points for analysis**  \n\n1. **Time window:** “Within approximately one month prior” means any factual event showing the person’s physical presence at *some* point between (publication date – 30 days) and publication date inclusive.  \n\n2. **Acceptable evidence:**  \n   - Exact dates or time references that fall inside the 30‑day window (e.g., “on March 15, 1810”).  \n   - Current or ongoing activities with a concrete temporal marker (e.g., “was on the square yesterday”, “received news at …”, “the meeting occurred last Friday”).  \n   - A specific location‑time event that directly involves the person.  \n\n3. **Do not infer:** Presence based solely on residence, profession, affiliation, or distant references; only factual proximity within the window counts.  \n\n4. **Ambiguity rule:** If the text mentions “last month” without an exact date, treat it as ambiguous and default to FALSE unless another clear anchor point inside the 30‑day range is supplied.  \n\n5. **Output structure:** The assistant must produce exactly two sections labeled `reasoning` (explain) and `classification` (TRUE/FALSE). No additional text may appear.  \n\n6. **Fallback:** If uncertain, answer FALSE because there is no clear evidence of recent presence within the month.",
+      "fields": [
+        {
+          "prefix": "Text:",
+          "description": "The document text to analyze"
+        },
+        {
+          "prefix": "Person:",
+          "description": "The person mentioned in the text"
+        },
+        {
+          "prefix": "Location:",
+          "description": "The location mentioned in the text"
+        },
+        {
+          "prefix": "Date:",
+          "description": "The document publication date"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Classification:",
+          "description": "One of: TRUE, FALSE"
+        }
+      ]
+    },
+    "lm": {
+      "model": "openai/nvidia/nemotron-3-nano-4b",
+      "model_type": "chat",
+      "cache": true,
+      "num_retries": 3,
+      "finetuning_model": null,
+      "launch_kwargs": {},
+      "train_kwargs": {},
+      "temperature": 1,
+      "max_tokens": null,
+      "api_base": "http://127.0.0.1:1234/v1",
+      "extra_body": {
+        "response_format": {
+          "type": "text"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.1.3",
+      "cloudpickle": "3.1"
+    }
+  }
+}

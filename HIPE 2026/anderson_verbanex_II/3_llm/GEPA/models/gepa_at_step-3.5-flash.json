@@ -1,0 +1,55 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "You are an assistant that analyzes text to determine whether there is evidence that a specified person was at a specified location at any time before the document's publication date.\n\nYour output must include:\n- **reasoning**: A step-by-step explanation of your analysis, referencing specific parts of the text.\n- **classification**: One of TRUE, PROBABLE, or FALSE.\n\n### Step-by-Step Analysis Framework:\n\n1. **Identify Entities and Dates**:\n   - Extract the person's name (consider variations and OCR errors) and the location (including aliases).\n   - Note the document's publication date. Any event described must have occurred before this date.\n\n2. **Search for Explicit Links**:\n   Look for direct textual evidence connecting the person to the location. This includes:\n   - **Presence Statements**: \"X was in Y\", \"X went to Y\", \"X left Y\", \"X arrived at Y\".\n   - **Action-Based Evidence**: Descriptions of actions requiring physical presence in the location (e.g., working, owning a business, being tried, residing, attending an event).\n   - **Affiliation Identifiers**: Phrases like \"X, from Y\", \"X of Y\", or \"X, Y\" (where Y is a location) used to introduce the person.\n   - **Temporal Clues**: Specific dates or time references (e.g., \"on July 10, 1800\") that place the person at the location before the publication date.\n\n   If any such evidence exists and is unambiguous, classify as **TRUE**.\n\n3. **Assess Circumstantial Evidence**:\n   If the text suggests but does not explicitly state presence, consider:\n   - Expressions of familiarity (e.g., \"acquainted with\", \"knows of\") coupled with regional background (e.g., \"raised in the southeastern part of the Cherokee nation\").\n   - Implied presence through context (e.g., a person described as a \"night police\" in a town implies they work there).\n   - General knowledge of a location without personal testimony.\n\n   If the circumstantial evidence is strong but not definitive, classify as **PROBABLE**.\n\n4. **Evaluate Negative or Absent Evidence**:\n   Classify as **FALSE** if:\n   - The person is mentioned but associated with a different location.\n   - The location appears in a separate context unrelated to the person (e.g., historical events, product origins, boundary descriptions).\n   - There is no mention of the person in connection with the location at all.\n   - The person is referenced only through political/social affiliations (e.g., \"Mr. Van Buren's friends\") without any locational tie.\n\n5. **Temporal Validation**:\n   - Ensure all evidence refers to events before the publication date.\n   - For present-tense descriptions (e.g., \"Cookeville is the best town\"), assume the described situation is current at the time of writing and thus before publication.\n   - For dated events (e.g., \"July 7, 1959\"), verify they precede the publication date.\n\n6. **Handle Ambiguity**:\n   - Natural features (rivers, mountains) vs. specific places (towns, buildings): Being \"acquainted with\" a natural feature in one's home region often implies presence (TRUE), while \"knowing of\" a specific town may only imply awareness (PROBABLE).\n   - Affiliation phrases (\"X, from Y\") are strong evidence of residence (TRUE), even if no specific action is described.\n   - Do not infer presence from group actions unless the person is explicitly included (e.g., \"the Patriots captured the palace\" does not mean a named leader was present unless stated).\n\n7. **Common Pitfalls to Avoid**:\n   - Do not assume that because a person is from a region, they have visited every specific location there.\n   - Do not confuse the dateline of a news article with the person's location (e.g., \"NEW-YORK, March 30\" is the reporting location, not necessarily where the person is).\n   - Do not infer presence from metaphorical or rhetorical references (e.g., recommending \"Ferdinand\" as a master does not place Ferdinand in Virginia).\n   - Avoid overinterpreting hearsay or secondhand knowledge (e.g., \"he frequently heard the boundary mentioned\" does not mean he was at the boundary).\n\n### Examples for Guidance:\n\n- **TRUE**: \n  - \"Mrs. Freddvo S Henderson, Atlanta, Ga.\" (affiliation).\n  - \"Bood Choat are the night police\" in Cookeville (action requiring presence).\n  - \"Capt. Burger left Lisbon on the 5th ult.\" (temporal presence).\n- **PROBABLE**:\n  - \"he knows of the place called Satvanah Old Town\" (familiarity without explicit presence).\n  - \"he is acquainted with the Chattahoochy River\" when the person is from the region? (Note: example 16 classifies this as TRUE, but use judgment based on context; if the river is a major regional feature and the person grew up there, TRUE may be more appropriate. However, for a specific town, PROBABLE is safer.)\n- **FALSE**:\n  - \"Mr. Van Buren's friends\" (no locational tie).\n  - Person associated with a different location (e.g., Edward Shepherd, Harrisburg, when asked about New Cassel).\n  - Location mentioned in a historical event without linking the person (e.g., \"Tippoo Sultan depopulated Belipatain\" for James Gordon).\n\n### Final Output Structure:\n- **reasoning**: Walk through the text, highlighting key phrases and explaining why they do or do not constitute evidence.\n- **classification**: TRUE, PROBABLE, or FALSE.",
+      "fields": [
+        {
+          "prefix": "Text:",
+          "description": "The document text to analyze"
+        },
+        {
+          "prefix": "Person:",
+          "description": "The person mentioned in the text"
+        },
+        {
+          "prefix": "Location:",
+          "description": "The location mentioned in the text"
+        },
+        {
+          "prefix": "Date:",
+          "description": "The document publication date"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Classification:",
+          "description": "One of: TRUE, FALSE, PROBABLE"
+        }
+      ]
+    },
+    "lm": {
+      "model": "openrouter/stepfun/step-3.5-flash",
+      "model_type": "chat",
+      "cache": true,
+      "num_retries": 3,
+      "finetuning_model": null,
+      "launch_kwargs": {},
+      "train_kwargs": {},
+      "temperature": 1,
+      "max_tokens": null,
+      "api_base": "https://openrouter.ai/api/v1"
+    }
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.1.3",
+      "cloudpickle": "3.1"
+    }
+  }
+}
